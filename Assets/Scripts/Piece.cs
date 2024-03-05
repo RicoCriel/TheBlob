@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum PieceState
 {
@@ -28,6 +29,7 @@ public class Piece : MonoBehaviour
     }
 
     public PieceType pieceType;
+    public GridManager gridManager;
 
     private void Start()
     {
@@ -61,5 +63,20 @@ public class Piece : MonoBehaviour
     {
         string message = $"Piece state: {state}, Piece type: {type}, Blob size: {_blobSize}";
         Debug.Log(message); 
+    }
+
+    public void Move(PieceType type, Tile tile)
+    {
+        if(type == PieceType.JustABlob)
+        {
+            Vector3 newPosition = tile.transform.position + new Vector3(1, 0, 1);
+            transform.DOMove(newPosition, 1f);
+            transform.DOJump(newPosition, 100f, 1, 1, true).SetEase(Ease.InElastic);
+        }
+
+        if (type == PieceType.Car)
+        {
+
+        }
     }
 }
