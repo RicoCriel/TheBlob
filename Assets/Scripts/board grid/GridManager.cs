@@ -8,21 +8,28 @@ public class GridManager : MonoBehaviour
     private BidirectionalDictionary<Vector2, Tile> Grid = new BidirectionalDictionary<Vector2, Tile>();
     private BidirectionalDictionary<Tile, Piece> Board = new BidirectionalDictionary<Tile, Piece>();
 
+    public void MovePieceModel(Piece piece, Tile ToTile)
+    {
+        Board.Remove(piece);
+        Board.Add(ToTile, piece);
+    }
+
+
     public bool TryGetTileAt(Vector2 coord, out Tile position)
     {
         return Grid.TryGetValue(coord, out position);
     }
-    
+
     public bool trygetCoordOfTile(Tile tile, out Vector2 coord)
     {
         return Grid.TryGetKey(tile, out coord);
     }
-    
+
     public bool TryGetPieceAt(Tile tile, out Piece piece)
     {
         return Board.TryGetValue(tile, out piece);
     }
-    
+
     public bool TryGetTileOfPiece(Piece piece, out Tile tile)
     {
         return Board.TryGetKey(piece, out tile);
@@ -38,18 +45,18 @@ public class GridManager : MonoBehaviour
     {
         Grid.Remove(position);
     }
-   
-    
+
+
     public void Clear()
     {
         Grid.Clear();
     }
-    
+
     public void RemoveAllTiles(Vector2 position)
     {
         Grid.Remove(position);
     }
-    
+
     public void AddPiece(Tile tile, Piece piece)
     {
         Board.Add(tile, piece);
@@ -58,6 +65,11 @@ public class GridManager : MonoBehaviour
     public void ClearPieces()
     {
         Board.Clear();
+    }
+
+    public void RemovePiece(Piece piece)
+    {
+        Board.Remove(piece);
     }
     
     public void RemoveAllPieces(Tile tile)
