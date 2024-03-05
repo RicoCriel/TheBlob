@@ -28,6 +28,7 @@ public class Piece : MonoBehaviour
         set => _blobSize = value;
     }
 
+    public PieceState pieceState;
     public PieceType pieceType;
     public GridManager gridManager;
 
@@ -65,7 +66,7 @@ public class Piece : MonoBehaviour
         Debug.Log(message); 
     }
 
-    public void Move(PieceType type, Tile tile)
+    public void MoveTo(PieceType type, Tile tile)
     {
         if(type == PieceType.JustABlob)
         {
