@@ -2,13 +2,17 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
+using System.Diagnostics.Tracing;
 
-public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private float hoverDelay;
-    [SerializeField] private Material hoverMat;
-    [SerializeField] private Material normMat;
 
+    private float lerpDuration = 2f;
+    private Color startColor = Color.red;
+    private Color endColor = Color.green;
+    private Material lerpMaterial;
     private Coroutine hoverCoroutine;
 
 
@@ -18,11 +22,17 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (state)
         {
-            GetComponent<MeshRenderer>().material = hoverMat;
+            lerpMaterial.DOColor(endColor, lerpDuration)
+               .From(startColor)
+               .SetEase(Ease.Linear)
+               .OnComplete(() => Debug.Log("Color Lerp Completed"));
         }
         else
         {
-            GetComponent<MeshRenderer>().material = normMat;
+            lerpMaterial.DOColor(startColor, lerpDuration)
+               .From(endColor)
+               .SetEase(Ease.Linear)
+               .OnComplete(() => Debug.Log("Color Lerp Completed"));
         }
     }
 
@@ -41,9 +51,22 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         // Invoke immediate pointer exit event
         ChangeHoverState(false);
-        OnPointerExitImmediate(new PointerExitEventArgs(transform.position));
+        OnPointerExitImmediate(new PointerEventArgs(transform.position,this));
     }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            OnPointerClickEventRight(new PointerEventArgs(transform.position, this));
+        }
 
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            OnPointerClickEventLeft(new PointerEventArgs(transform.position, this));
+        }
+        
+       
+    }
     private IEnumerator DelayedPointerEnter(float delay)
     {
         // Wait for the specified delay
@@ -51,47 +74,46 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         // Raise the pointer enter event after the delay
         ChangeHoverState(true);
-        OnPointerEnterDelayed(new PointerEnterEventArgs(transform.position));
+        OnPointerEnterDelayed(new PointerEventArgs(transform.position,this));
     }
 
-    public event EventHandler<PointerEnterEventArgs> PointerEnterDelayed;
-    public event EventHandler<PointerExitEventArgs> PointerExitImmediate;
+    public event EventHandler<PointerEventArgs> PointerEnterDelayed;
+    public event EventHandler<PointerEventArgs> PointerExitImmediate;
+    public event EventHandler<PointerEventArgs> PointerClickLeft;
+    public event EventHandler<PointerEventArgs> PointerClickRight;
 
-    protected virtual void OnPointerEnterDelayed(PointerEnterEventArgs eventargs)
+    protected virtual void OnPointerEnterDelayed(PointerEventArgs eventargs)
     {
-        EventHandler<PointerEnterEventArgs> handler = PointerEnterDelayed;
+        EventHandler<PointerEventArgs> handler = PointerEnterDelayed;
         handler?.Invoke(this, eventargs);
     }
 
-    protected virtual void OnPointerExitImmediate(PointerExitEventArgs eventargs)
+    protected virtual void OnPointerExitImmediate(PointerEventArgs eventargs)
     {
-        EventHandler<PointerExitEventArgs> handler = PointerExitImmediate;
+        EventHandler<PointerEventArgs> handler = PointerExitImmediate;
         handler?.Invoke(this, eventargs);
     }
-    
-    //public PieceData GetPieceData()
-    //{
-    // pData = somehow get piecedata for this tile
-    // return pData;
-    //}
-}
 
-public class PointerEnterEventArgs : EventArgs
-{
-    public Vector3 Pos { get; }
-
-    public PointerEnterEventArgs(Vector3 pos)
+    protected virtual void OnPointerClickEventLeft(PointerEventArgs eventargs)
     {
-        Pos = pos;
+        EventHandler<PointerEventArgs> handler = PointerClickLeft;
+        handler?.Invoke(this, eventargs);
+    }
+    protected virtual void OnPointerClickEventRight(PointerEventArgs eventargs)
+    {
+        EventHandler<PointerEventArgs> handler = PointerClickRight;
+        handler?.Invoke(this, eventargs);
     }
 }
 
-public class PointerExitEventArgs : EventArgs
+public class PointerEventArgs : EventArgs
 {
     public Vector3 Pos { get; }
+    public Tile Tile { get; }
 
-    public PointerExitEventArgs(Vector3 pos)
+    public PointerEventArgs(Vector3 pos,Tile tile)
     {
         Pos = pos;
+        Tile = tile;
     }
 }
