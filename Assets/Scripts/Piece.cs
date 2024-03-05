@@ -79,11 +79,12 @@ public class Piece : MonoBehaviour
 
         if (type == PieceType.Car)
         {
+            //might be incorrect
             transform.DOMove(tile.transform.position, 1, true).SetEase(Ease.Linear);
         }
     }
 
-    public void ChangeColor(PieceType type,  Color color)
+    public void ChangeColor(PieceType type)
     {
         Renderer renderer = GetComponent<Renderer>();
 
@@ -92,10 +93,10 @@ public class Piece : MonoBehaviour
             switch (type)
             {
                 case PieceType.Car:
-                    renderer.material.color = Color.green;
+                    renderer.material.DOColor(Color.green, 0.5f);
                     break;
                 case PieceType.Building:
-                    renderer.material.color = Color.blue;
+                    renderer.material.DOColor(Color.blue, 0.5f);
                     break;
                 default:
                     break;
