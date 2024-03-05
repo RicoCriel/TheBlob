@@ -38,6 +38,8 @@ public class Piece : MonoBehaviour
         {
             _blobSize = transform.localScale;
         }
+
+        gridManager = FindObjectOfType<GridManager>();
     }
     public void Take()
     {
