@@ -10,15 +10,17 @@ namespace SelectionBlob
         {
             List<Tile> foundtiles = new List<Tile>();
 
-            foreach (var VARIABLE in _directions)
+            foreach (Vector3 direction in _directions)
             {
-                if (gridManager.TryGetTileAt(center.transform.position + VARIABLE, out Tile tile))
+                if (gridManager.TryGetTileAt(center.transform.position + direction, out Tile tile))
                 {
                     // if (gridManager.TryGetPieceAt(tile, out Piece piece))
                     // {
                     //     if(piece.pieceType == PieceType.)
                     //         continue;
                     // }
+                    
+                    
                     foundtiles.Add(tile);
                 }
             }
@@ -58,9 +60,9 @@ namespace SelectionBlob
                 if (grid.TryGetTileAt(centertile.transform.position + VARIABLE, out Tile tile))
                 {
                     if (!grid.TryGetPieceAt(tile, out Piece piece))
-                    {
+                    // {
                         foundtiles.Add(tile);
-                    }
+                    // }
                 }
             }
 

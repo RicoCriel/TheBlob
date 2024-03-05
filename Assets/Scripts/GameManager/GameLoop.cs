@@ -31,14 +31,21 @@ public class GameLoop : MonoBehaviour
 
         foreach (Tile tile in tiles)
         {
-            gridManager.AddTile(tile.transform.position, tile);
+            var position = tile.transform.position;
+            gridManager.AddTile(new Vector2(position.x, position.z), tile);
 
             tile.PointerEnterDelayed += (sender, args) => {
-                //start popup logic.
+                if (gridManager.TryGetPieceAt(tile, out Piece piece))
+                {
+                    //start popup logic.
+                }
             };
 
             tile.PointerExitImmediate += (sender, args) => {
-                // stop popup logic.
+                if (gridManager.TryGetPieceAt(tile, out Piece piece))
+                {
+                    // stop popup logic.
+                }
             };
 
             tile.PointerClickLeft += (sender, args) => {
@@ -56,7 +63,8 @@ public class GameLoop : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            gridManager.TryGetTileAt(piece.transform.position, out Tile tile);
+            var transform1 = piece.transform;
+            gridManager.TryGetTileAt(new Vector2(transform1.position.x, transform1.position.z), out Tile tile);
             gridManager.AddPiece(tile, piece);
         }
     }
@@ -72,7 +80,7 @@ public class GameLoop : MonoBehaviour
             currentlySelectedTile = null;
             DeselectAllTiles(currentSelection);
             currentSelection = null;
-
+            //todo tick all the blobs for damage
             return;
         }
 
@@ -86,9 +94,12 @@ public class GameLoop : MonoBehaviour
             currentSelection = HighlightLogic(tile, piece);
             HighlightAlTiles(currentSelection);
             //todo piece.OpenPopupImmediately();
-          
+
 
         }
+        
+        //todo extra exception als we op een tile drukken die niet in de selectie zit, maar er is wel een selectie
+        //todo -> clear cashes
     }
     private void MovementLogic(Tile ToTile, GridManager grid, bool leftClick)
     {
@@ -109,6 +120,7 @@ public class GameLoop : MonoBehaviour
 
         int blobSize = currentlySelectedPiece.BlobHealth;
 
+        //call after movement execution
         DestroyPiece(currentlySelectedPiece);
         SpawnNewBlob(toTile, blobSize);
     }
@@ -181,6 +193,7 @@ public class GameLoop : MonoBehaviour
         }
 
         piece.MovetoTile(Totile);
+        //to piece overname animation
     }
 
     private void SplittingMovement(Tile Totile, GridManager grid, Piece piece)
@@ -235,49 +248,49 @@ public class GameLoop : MonoBehaviour
         }
     }
 
- 
-private void HighlightAlTiles(List<Tile> tiles)
-{
-    foreach (Tile tile in tiles)
-    {
-        tile.ChangeHoverState(true);
-    }
-}
 
-private void DeselectAllTiles(List<Tile> tiles)
-{
-    foreach (Tile tile in tiles)
+    private void HighlightAlTiles(List<Tile> tiles)
     {
-        tile.ChangeHoverState(false);
-    }
-}
-
-private List<Tile> HighlightLogic(Tile tile, Piece piece)
-{
-    if (piece.pieceState == PieceState.Blobbed)
-    {
-        switch (piece.pieceType)
+        foreach (Tile tile in tiles)
         {
-            case PieceType.JustABlob:
-                return selectionManager.GetTilesNormalMovement(tile, gridManager);
-            case PieceType.Car:
-                return selectionManager.GetAllTilesInRangeBFS(tile, 4, gridManager);
-                ;
-                break;
-            case PieceType.Building:
-                return selectionManager.GetTilesNormalMovement(tile, gridManager);
-            default:
-                return null;
+            tile.ChangeHoverState(true);
         }
     }
 
-    return null;
-}
+    private void DeselectAllTiles(List<Tile> tiles)
+    {
+        foreach (Tile tile in tiles)
+        {
+            tile.ChangeHoverState(false);
+        }
+    }
 
-public enum ActionType
-{
-    Normal,
-    Split,
-    TakenObjectExecution
-}
+    private List<Tile> HighlightLogic(Tile tile, Piece piece)
+    {
+        if (piece.pieceState == PieceState.Blobbed)
+        {
+            switch (piece.pieceType)
+            {
+                case PieceType.JustABlob:
+                    return selectionManager.GetTilesNormalMovement(tile, gridManager);
+                case PieceType.Car:
+                    return selectionManager.GetAllTilesInRangeBFS(tile, 4, gridManager);
+                    ;
+                    break;
+                case PieceType.Building:
+                    return selectionManager.GetTilesNormalMovement(tile, gridManager);
+                default:
+                    return null;
+            }
+        }
+
+        return null;
+    }
+
+    public enum ActionType
+    {
+        Normal,
+        Split,
+        TakenObjectExecution
+    }
 }
