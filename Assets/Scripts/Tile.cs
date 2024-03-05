@@ -8,29 +8,32 @@ using System.Diagnostics.Tracing;
 public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private float hoverDelay;
-
-    private float lerpDuration = 2f;
-    private Color startColor = Color.red;
+    [SerializeField] private float lerpDuration;
+    
+    private Color startColor = Color.white;
     private Color endColor = Color.green;
     private Material lerpMaterial;
     private Coroutine hoverCoroutine;
 
 
-  
+    void Start()
+    {
+        lerpMaterial = GetComponentInChildren<Renderer>().material;
+    }
 
     public void ChangeHoverState(bool state)
     {
         if (state)
         {
             lerpMaterial.DOColor(endColor, lerpDuration)
-               .From(startColor)
+               .From(lerpMaterial.color)
                .SetEase(Ease.Linear)
                .OnComplete(() => Debug.Log("Color Lerp Completed"));
         }
         else
         {
             lerpMaterial.DOColor(startColor, lerpDuration)
-               .From(endColor)
+               .From(lerpMaterial.color)
                .SetEase(Ease.Linear)
                .OnComplete(() => Debug.Log("Color Lerp Completed"));
         }
@@ -38,7 +41,7 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (hoverCoroutine != null)
+        if (hoverCoroutine == null)
             // Start the coroutine to delay the pointer enter action
             hoverCoroutine = StartCoroutine(DelayedPointerEnter(hoverDelay));
     }
@@ -47,7 +50,7 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     {
         // Stop the coroutine if it's running
         if (hoverCoroutine != null)
-            StopCoroutine(hoverCoroutine);
+            StopCoroutine(hoverCoroutine); hoverCoroutine = null;
 
         // Invoke immediate pointer exit event
         ChangeHoverState(false);
