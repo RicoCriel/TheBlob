@@ -30,7 +30,7 @@ public class Piece : MonoBehaviour
 
     public PieceState pieceState;
     public PieceType pieceType;
-    public GridManager gridManager;
+    private GridManager _gridManager;
 
     private void Start()
     {
@@ -39,7 +39,7 @@ public class Piece : MonoBehaviour
             _blobSize = transform.localScale;
         }
 
-        gridManager = FindObjectOfType<GridManager>();
+        _gridManager = FindObjectOfType<GridManager>();
     }
     public void Take()
     {
