@@ -71,13 +71,39 @@ public class Piece : MonoBehaviour
         if(type == PieceType.JustABlob)
         {
             Vector3 newPosition = tile.transform.position + new Vector3(1, 0, 1);
-            transform.DOMove(newPosition, 1f);
+            transform.DOMove(newPosition, 1f).SetEase(Ease.Linear);
             transform.DOJump(newPosition, 100f, 1, 1, true).SetEase(Ease.InElastic);
         }
 
         if (type == PieceType.Car)
         {
-
+            transform.DOMove(tile.transform.position, 1, true).SetEase(Ease.Linear);
         }
     }
+
+    public void ChangeColor(PieceType type,  Color color)
+    {
+        Renderer renderer = GetComponent<Renderer>();
+
+        if (renderer != null)
+        {
+            switch (type)
+            {
+                case PieceType.Car:
+                    renderer.material.color = Color.green;
+                    break;
+                case PieceType.Building:
+                    renderer.material.color = Color.blue;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Renderer component not found on the object.");
+        }
+    }
+
+
 }
