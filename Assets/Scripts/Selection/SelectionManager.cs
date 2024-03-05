@@ -29,8 +29,10 @@ namespace SelectionBlob
         {
             List<Tile> neighbourStrategyBFS(Tile Ctile, GridManager grid) => NeighbourLogic(Ctile, grid);
 
-            BreathFirstSearch bfs = new BreathFirstSearch(neighbourStrategyBFS);
-            return bfs.Area(ceterTile, range);
+            // BreathFirstSearch bfs = new BreathFirstSearch(neighbourStrategyBFS);
+            // return bfs.Area(ceterTile, range);
+
+            return new List<Tile>();
         }
         
         private List<Tile> NeighbourLogic(Tile centertile, GridManager grid)
