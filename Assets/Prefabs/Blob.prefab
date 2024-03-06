@@ -72,6 +72,10 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d26eddcd9f313e4281242e11637d5e8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5642692078422638675}
     - targetCorrespondingSourceObject: {fileID: 4503863165627716261, guid: 6d26eddcd9f313e4281242e11637d5e8,
         type: 3}
       insertIndex: -1
@@ -315,6 +319,30 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.003
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6902807785318966947 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d26eddcd9f313e4281242e11637d5e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 5983835617252989938}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5642692078422638675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6902807785318966947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a033c22abd7c5bc4e8de56f40ece0be9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blobTakeoverMin: -2147483648
+  blobTakeoverMax: -2147483648
+  currentEnemyAmount: 0
+  BlobHealth: 0
+  pieceState: 2
+  pieceType: 0
 --- !u!1 &7893180006984386903 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4503863165627716261, guid: 6d26eddcd9f313e4281242e11637d5e8,
