@@ -21,7 +21,8 @@ public class GameLoop : MonoBehaviour
 
     private void Awake()
     {
-        SelectionManager selectionManager = new SelectionManager();
+        selectionManager = new SelectionManager();
+        currentSelection = new List<Tile>();
 
         // to be sure
         gridManager = FindObjectOfType<GridManager>();
@@ -64,8 +65,10 @@ public class GameLoop : MonoBehaviour
         foreach (Piece piece in pieces)
         {
             var transform1 = piece.transform;
-            gridManager.TryGetTileAt(new Vector2(transform1.position.x, transform1.position.z), out Tile tile);
-            gridManager.AddPiece(tile, piece);
+            if (gridManager.TryGetTileAt(new Vector2(transform1.position.x, transform1.position.z), out Tile tile))
+            {
+                gridManager.AddPiece(tile, piece);
+            }
         }
     }
 
