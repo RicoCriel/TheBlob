@@ -116,9 +116,10 @@ public class Piece : MonoBehaviour
     {
         if (pieceType == PieceType.JustABlob)
         {
-            Vector3 newPosition = tile.transform.position + new Vector3(1, 0, 1);
-            transform.DOMove(newPosition, 1f).SetEase(Ease.Linear);
-            transform.DOJump(newPosition, 100f, 1, 1, true).SetEase(Ease.InElastic);
+            Vector3 newPosition = tile.transform.position + new Vector3(0, 2, 0);
+            transform.DOMove(newPosition, 1f).SetEase(Ease.InElastic);
+            //transform.DOJump(newPosition, 2, 1, 0.5f, true).SetEase(Ease.Linear);
+            //transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y +2 , tile.transform.position.z);
         }
 
     }

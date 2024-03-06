@@ -75,7 +75,9 @@ public class GameLoop : MonoBehaviour
 
     private void tileClickLogic(Tile tile, bool leftClick)
     {
+        
         //already selected stuff
+        Debug.Log("Tile Clicked");
         if (currentSelection.Contains(tile))
         {
             MovementLogic(tile, gridManager, leftClick);
@@ -83,10 +85,10 @@ public class GameLoop : MonoBehaviour
             currentlySelectedTile = null;
             DeselectAllTiles(currentSelection);
             currentSelection = null;
+            currentSelection = new List<Tile>();
             //todo tick all the blobs for damage
             return;
         }
-
 
         if (gridManager.TryGetPieceAt(tile, out Piece piece))
         {
@@ -100,7 +102,8 @@ public class GameLoop : MonoBehaviour
 
 
         }
-        
+
+
         //todo extra exception als we op een tile drukken die niet in de selectie zit, maar er is wel een selectie
         //todo -> clear cashes
     }
@@ -278,8 +281,6 @@ public class GameLoop : MonoBehaviour
                     return selectionManager.GetTilesNormalMovement(tile, gridManager);
                 case PieceType.Car:
                     return selectionManager.GetAllTilesInRangeBFS(tile, 4, gridManager);
-                    ;
-                    break;
                 case PieceType.Building:
                     return selectionManager.GetTilesNormalMovement(tile, gridManager);
                 default:

@@ -129,8 +129,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b408616cd1248e4ab7896f26235fa2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverDelay: 2
-  lerpDuration: 2
+  hoverDelay: 0.3
+  lerpDuration: 0.3
 --- !u!1 &9050048214647367765
 GameObject:
   m_ObjectHideFlags: 0
