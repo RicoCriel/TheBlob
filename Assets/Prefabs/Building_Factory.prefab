@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 630255789364747021}
   - component: {fileID: 8733395537235101835}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6925945323254262549}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   m_Component:
   - component: {fileID: 753015943698097871}
   - component: {fileID: 1113938988453413750}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Building_Factory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 1958021213081225240}
   - component: {fileID: 3804321388020459039}
   - component: {fileID: 683169357766537686}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Building_Factory
   m_TagString: Untagged
   m_Icon: {fileID: 0}

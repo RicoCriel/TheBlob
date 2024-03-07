@@ -148,6 +148,9 @@ public class GameLoop : MonoBehaviour
         {
             switch (currentlySelectedPiece.pieceType)
             {
+                //if (grid.TryGetPieceAt(Totile, out Piece toPiece))
+                //check if there is a toPiece
+                //if there is check what type and sets statates accordingly 
                 case PieceType.JustABlob:
                     if (isLeftClick)
                     {
