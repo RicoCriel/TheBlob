@@ -132,7 +132,8 @@ public class GameLoop : MonoBehaviour
     }
     private void SpawnNewBlob(Tile toTile, int blobhealth)
     {
-        Piece spawnedpiece = Instantiate(BlobBaseObject, toTile.transform.position, Quaternion.identity);
+        Piece spawnedpiece = Instantiate(BlobBaseObject, toTile.transform.position + new Vector3 (0,1,0), Quaternion.identity);
+        //spawnedpiece.transform.localScale = new Vector3(blobhealth, blobhealth,blobhealth);
         gridManager.AddPiece(toTile, spawnedpiece);
     }
     private void DestroyPiece(Piece piece)
@@ -154,10 +155,47 @@ public class GameLoop : MonoBehaviour
                 case PieceType.JustABlob:
                     if (isLeftClick)
                     {
+                        if (grid.TryGetPieceAt(Totile, out Piece toPiece))
+                        {
+                            if (toPiece.pieceType == PieceType.JustABlob)
+                            {
+                                return;
+                            }
+                            if (toPiece.pieceType == PieceType.Car)
+                            {
+                                //car logic non split
+                                return;
+                            }
+                            if (toPiece.pieceType == PieceType.Building)
+                            {
+                                if (toPiece.pieceState != PieceState.Dead)
+                                {
+                                    NonSplittingMovementToBuilding(Totile, grid, piece);
+                                }
+                                return;
+                            }
+                        }
                         NonSplittingMovement(Totile, grid, piece);
                     }
                     else
                     {
+                        if (grid.TryGetPieceAt(Totile, out Piece toPiece))
+                        {
+                            if (toPiece.pieceType == PieceType.JustABlob)
+                            {
+                                return;
+                            }
+                            if (toPiece.pieceType == PieceType.Car)
+                            {
+                                //car logic  split
+                                return;
+                            }
+                            if (toPiece.pieceType == PieceType.Building)
+                            {
+                                //  split building logic
+                                return;
+                            }
+                        }
                         SplittingMovement(Totile, grid, piece);
                     }
 
@@ -166,7 +204,7 @@ public class GameLoop : MonoBehaviour
                 case PieceType.Building:
                     if (isLeftClick)
                     {
-                        NonSplittingMovement(Totile, grid, piece);
+                        NonSplittingMovementFromBuilding(Totile, grid, piece);
                         //todo kill oroginal piece if slime left.
                         // currentlySelectedPiece.pieceState = PieceState.Dead;
                     }
@@ -205,6 +243,36 @@ public class GameLoop : MonoBehaviour
         //to piece overname animation
     }
 
+    private void NonSplittingMovementToBuilding(Tile Totile, GridManager grid, Piece piece)
+    {
+        
+
+        if (grid.TryGetPieceAt(Totile, out Piece toPiece1))
+        {
+            toPiece1.BlobSize = piece.BlobSize;
+            DestroyPiece(piece);
+            toPiece1.pieceState = PieceState.Blobbed;
+            toPiece1.transform.Find("FX_BlobEating").gameObject.SetActive(true);
+            if (toPiece1.IsForcedTakeOverAmount(currentlySelectedPiece, out var amount, out bool forcedMAx))
+            {
+                int newBlobHealth = currentlySelectedPiece.BlobHealth - amount;
+                if (newBlobHealth > 0)
+                {
+                    SpawnNewBlob(currentlySelectedTile, newBlobHealth);
+                }
+                toPiece1.TakeOverAndIncreaseBlobHealth(amount);
+            }
+        }
+    }
+    private void NonSplittingMovementFromBuilding(Tile Totile, GridManager grid, Piece piece)
+    {
+
+        SpawnNewBlob(Totile, piece.BlobHealth);
+        piece.transform.Find("FX_BlobEating").gameObject.SetActive(false);
+        piece.PieceDeathButModelStays();
+        piece.pieceState = PieceState.Dead;
+
+    }
     private void SplittingMovement(Tile Totile, GridManager grid, Piece piece)
     {
         grid.MovePieceModel(piece, Totile);

@@ -12,7 +12,7 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     [SerializeField] private float lerpDuration;
     
     private Color startColor = Color.white;
-    private Color endColor = Color.green;
+    private Color endColor = Color.red;
     private Material lerpMaterial;
     private Coroutine hoverCoroutine;
 

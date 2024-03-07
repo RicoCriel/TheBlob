@@ -59,7 +59,7 @@ public class Piece : MonoBehaviour
     
     public void PieceDeathButModelStays()
     {
-        Renderer renderer = GetComponent<Renderer>();
+        Renderer renderer = GetComponentInChildren<Renderer>();
         renderer.material.DOColor(Color.gray, 0.5f);
     }
 
@@ -116,7 +116,7 @@ public class Piece : MonoBehaviour
     {
         if (pieceType == PieceType.JustABlob)
         {
-            Vector3 newPosition = tile.transform.position + new Vector3(0, 2, 0);
+            Vector3 newPosition = tile.transform.position + new Vector3(0, 1, 0);
             transform.DOMove(newPosition, 1f).SetEase(Ease.InElastic);
             //transform.DOJump(newPosition, 2, 1, 0.5f, true).SetEase(Ease.Linear);
             //transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y +2 , tile.transform.position.z);
