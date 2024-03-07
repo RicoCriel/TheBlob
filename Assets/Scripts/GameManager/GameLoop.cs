@@ -92,12 +92,24 @@ public class GameLoop : MonoBehaviour
 
         if (gridManager.TryGetPieceAt(tile, out Piece piece))
         {
-            currentlySelectedPiece = piece;
-            currentlySelectedTile = tile;
+            
             //try get piece
             //highlight
             currentSelection = HighlightLogic(tile, piece);
-            HighlightAlTiles(currentSelection);
+            if(currentSelection != null)
+            {
+                currentlySelectedPiece = piece;
+                currentlySelectedTile = tile;
+                HighlightAlTiles(currentSelection);
+            }
+            //else
+            //{
+            //    currentlySelectedPiece = null;
+            //    currentlySelectedTile = null;
+            //    DeselectAllTiles(currentSelection);
+            //    currentSelection = null;
+            //    currentSelection = new List<Tile>();
+            //}
             //todo piece.OpenPopupImmediately();
 
 
@@ -134,6 +146,7 @@ public class GameLoop : MonoBehaviour
     {
         Piece spawnedpiece = Instantiate(BlobBaseObject, toTile.transform.position + new Vector3 (0,1,0), Quaternion.identity);
         //spawnedpiece.transform.localScale = new Vector3(blobhealth, blobhealth,blobhealth);
+        spawnedpiece.BlobHealth = blobhealth;
         gridManager.AddPiece(toTile, spawnedpiece);
     }
     private void DestroyPiece(Piece piece)
@@ -145,6 +158,18 @@ public class GameLoop : MonoBehaviour
 
     private void ExecuteMovement(Tile Totile, GridManager grid, bool isLeftClick)
     {
+        var objects = FindObjectsOfType<Piece>();
+        foreach (var d in objects)
+        {
+            if (d.pieceState == PieceState.Blobbed)
+            {
+                d.BlobHealth -= 1;
+                if (d.BlobHealth <= 0)
+                {
+                    DestroyPiece(d);
+                }
+            }
+        }
         if (grid.TryGetPieceAt(currentlySelectedTile, out Piece piece))
         {
             switch (currentlySelectedPiece.pieceType)
@@ -192,7 +217,7 @@ public class GameLoop : MonoBehaviour
                             }
                             if (toPiece.pieceType == PieceType.Building)
                             {
-                                //  split building logic
+                                SplittingMovementToBuilding(Totile, grid, piece);
                                 return;
                             }
                         }
@@ -210,7 +235,7 @@ public class GameLoop : MonoBehaviour
                     }
                     else
                     {
-                        SplittingMovement(Totile, grid, piece);
+                        SplittingMovementFromBuilding(Totile, grid, piece);
                         //todo kill oroginal piece if slime left.
                         // currentlySelectedPiece.pieceState = PieceState.Dead;
                     }
@@ -249,7 +274,7 @@ public class GameLoop : MonoBehaviour
 
         if (grid.TryGetPieceAt(Totile, out Piece toPiece1))
         {
-            toPiece1.BlobSize = piece.BlobSize;
+            toPiece1.BlobHealth = piece.BlobHealth + 6;
             DestroyPiece(piece);
             toPiece1.pieceState = PieceState.Blobbed;
             toPiece1.transform.Find("FX_BlobEating").gameObject.SetActive(true);
@@ -264,65 +289,113 @@ public class GameLoop : MonoBehaviour
             }
         }
     }
-    private void NonSplittingMovementFromBuilding(Tile Totile, GridManager grid, Piece piece)
+    private void SplittingMovementToBuilding(Tile Totile, GridManager grid, Piece piece)
     {
 
+
+        if (grid.TryGetPieceAt(Totile, out Piece toPiece1))
+        {
+            toPiece1.BlobHealth = (piece.BlobHealth /2 ) + 6;
+            piece.BlobHealth = piece.BlobHealth / 2;
+            toPiece1.pieceState = PieceState.Blobbed;
+            toPiece1.transform.Find("FX_BlobEating").gameObject.SetActive(true);
+            //if (toPiece1.IsForcedTakeOverAmount(currentlySelectedPiece, out var amount, out bool forcedMAx))
+            //{
+            //    int newBlobHealth = currentlySelectedPiece.BlobHealth - amount;
+            //    if (newBlobHealth > 0)
+            //    {
+            //        SpawnNewBlob(currentlySelectedTile, newBlobHealth);
+            //    }
+            //    toPiece1.TakeOverAndIncreaseBlobHealth(amount);
+            //}
+        }
+    }
+    private void NonSplittingMovementFromBuilding(Tile Totile, GridManager grid, Piece piece)
+    {
+        
         SpawnNewBlob(Totile, piece.BlobHealth);
+        
         piece.transform.Find("FX_BlobEating").gameObject.SetActive(false);
         piece.PieceDeathButModelStays();
         piece.pieceState = PieceState.Dead;
 
     }
+
+    private void SplittingMovementFromBuilding(Tile Totile, GridManager grid, Piece piece)
+    {
+        piece.BlobHealth = piece.BlobHealth / 2;
+        SpawnNewBlob(Totile, piece.BlobHealth);
+
+        //piece.transform.Find("FX_BlobEating").gameObject.SetActive(false);
+        //piece.PieceDeathButModelStays();
+        //piece.pieceState = PieceState.Dead;
+
+    }
+    //private void SplittingMovementFromBuilding(Tile Totile, GridManager grid, Piece piece)
+    //{
+
+    //    SpawnNewBlob(Totile, piece.BlobHealth);
+
+    //    piece.transform.Find("FX_BlobEating").gameObject.SetActive(false);
+    //    piece.PieceDeathButModelStays();
+    //    piece.pieceState = PieceState.Dead;
+
+    //}
     private void SplittingMovement(Tile Totile, GridManager grid, Piece piece)
     {
-        grid.MovePieceModel(piece, Totile);
+        //grid.MovePieceModel(piece, Totile);
+        //piece.MovetoTile(Totile);
+        int blobhalfHealth = currentlySelectedPiece.BlobHealth / 2;
+        piece.BlobHealth = blobhalfHealth;
+        SpawnNewBlob(Totile, piece.BlobHealth);
 
-        if (grid.TryGetPieceAt(Totile, out Piece toPiece1))
-        {
-            int blobhalfHealth = currentlySelectedPiece.BlobHealth / 2;
 
-            if (toPiece1.IsForcedTakeOverAmount(currentlySelectedPiece, out var amount, out bool forcedMax))
-            {
-                if (forcedMax)
-                {
-                    if (amount >= blobhalfHealth)
-                    {
-                        int newBlobHealth = currentlySelectedPiece.BlobHealth - amount;
-                        if (newBlobHealth > 0)
-                        {
-                            SpawnNewBlob(currentlySelectedTile, newBlobHealth);
-                        }
-                        toPiece1.TakeOverAndIncreaseBlobHealth(amount);
-                    }
-                }
-                else
-                {
-                    if (amount <= blobhalfHealth)
-                    {
-                        amount = blobhalfHealth;
-                        int newBlobHealth = currentlySelectedPiece.BlobHealth - amount;
-                        if (newBlobHealth > 0)
-                        {
-                            SpawnNewBlob(currentlySelectedTile, newBlobHealth);
-                        }
-                        toPiece1.TakeOverAndIncreaseBlobHealth(amount);
-                    }
-                }
+        //if (grid.TryGetPieceAt(Totile, out Piece toPiece1))
+        //{
+        //    int blobhalfHealth = currentlySelectedPiece.BlobHealth / 2;
 
-            }
-            else
-            {
-                SpawnNewBlob(currentlySelectedTile, blobhalfHealth);
-                toPiece1.TakeOverAndIncreaseBlobHealth(amount);
-            }
-        }
-        else
-        {
-            int blobhalfHealth = currentlySelectedPiece.BlobHealth / 2;
-            currentlySelectedPiece.BlobHealth = currentlySelectedPiece.BlobHealth / 2;
-            currentlySelectedPiece.MovetoTile(Totile);
-            SpawnNewBlob(currentlySelectedTile, blobhalfHealth);
-        }
+        //    if (toPiece1.IsForcedTakeOverAmount(currentlySelectedPiece, out var amount, out bool forcedMax))
+        //    {
+        //        if (forcedMax)
+        //        {
+        //            if (amount >= blobhalfHealth)
+        //            {
+        //                int newBlobHealth = currentlySelectedPiece.BlobHealth - amount;
+        //                if (newBlobHealth > 0)
+        //                {
+        //                    SpawnNewBlob(currentlySelectedTile, newBlobHealth);
+        //                }
+        //                toPiece1.TakeOverAndIncreaseBlobHealth(amount);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (amount <= blobhalfHealth)
+        //            {
+        //                amount = blobhalfHealth;
+        //                int newBlobHealth = currentlySelectedPiece.BlobHealth - amount;
+        //                if (newBlobHealth > 0)
+        //                {
+        //                    SpawnNewBlob(currentlySelectedTile, newBlobHealth);
+        //                }
+        //                toPiece1.TakeOverAndIncreaseBlobHealth(amount);
+        //            }
+        //        }
+
+        //    }
+        //    else
+        //    {
+        //        SpawnNewBlob(currentlySelectedTile, blobhalfHealth);
+        //        toPiece1.TakeOverAndIncreaseBlobHealth(amount);
+        //    }
+        //}
+        //else
+        //{
+        //    int blobhalfHealth = currentlySelectedPiece.BlobHealth / 2;
+        //    currentlySelectedPiece.BlobHealth = currentlySelectedPiece.BlobHealth / 2;
+        //    currentlySelectedPiece.MovetoTile(Totile);
+        //    SpawnNewBlob(currentlySelectedTile, blobhalfHealth);
+        //}
     }
 
 
