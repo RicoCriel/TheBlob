@@ -38,14 +38,20 @@ public class GameLoop : MonoBehaviour
             tile.PointerEnterDelayed += (sender, args) => {
                 if (gridManager.TryGetPieceAt(tile, out Piece piece))
                 {
-                    //start popup logic.
+                    if (piece.transform.Find("BuildingStats") != null)
+                    {
+                        piece.transform.Find("BuildingStats").gameObject.SetActive(true);
+                    }
                 }
             };
 
             tile.PointerExitImmediate += (sender, args) => {
                 if (gridManager.TryGetPieceAt(tile, out Piece piece))
                 {
-                    // stop popup logic.
+                    if (piece.transform.Find("BuildingStats") != null)
+                    {
+                        piece.transform.Find("BuildingStats").gameObject.SetActive(false);
+                    }
                 }
             };
 
