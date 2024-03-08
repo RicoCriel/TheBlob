@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 1700716a8dd8948cf8c66ea34a2786d5, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.3592844, g: 0.7508059, b: 0.80634266, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,24 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &35533983 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6882202577645740041, guid: bf9715743d997e9498e470674f8e5d05,
+    type: 3}
+  m_PrefabInstance: {fileID: 584069244}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &35533989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35533983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6457ca2dc4f0f754fbc50760ff9f1882, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &299862201
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +235,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5838692719205325910, guid: bf9715743d997e9498e470674f8e5d05,
         type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5838692719205325910, guid: bf9715743d997e9498e470674f8e5d05,
+        type: 3}
       propertyPath: orthographic
       value: 1
       objectReference: {fileID: 0}
@@ -278,7 +301,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6882202577645740041, guid: bf9715743d997e9498e470674f8e5d05,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 35533989}
   m_SourcePrefab: {fileID: 100100000, guid: bf9715743d997e9498e470674f8e5d05, type: 3}
 --- !u!1001 &635692297
 PrefabInstance:
