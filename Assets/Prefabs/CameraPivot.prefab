@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7035049920401790092}
+  - component: {fileID: 36076819794913326}
   m_Layer: 0
   m_Name: CameraPivot
   m_TagString: Untagged
@@ -32,6 +33,18 @@ Transform:
   - {fileID: 374701739200152865}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 30, y: 45, z: 0}
+--- !u!114 &36076819794913326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5458862767580613140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6457ca2dc4f0f754fbc50760ff9f1882, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6882202577645740041
 GameObject:
   m_ObjectHideFlags: 0

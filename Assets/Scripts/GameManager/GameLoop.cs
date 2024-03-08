@@ -15,6 +15,7 @@ public class GameLoop : MonoBehaviour
     private Piece currentlySelectedPiece;
     private Tile currentlySelectedTile;
     private List<Tile> currentSelection;
+    [SerializeField]  private CameraShake cameraShake;
 
     [SerializeField]
     private Piece BlobBaseObject;
@@ -165,6 +166,7 @@ public class GameLoop : MonoBehaviour
     private void ExecuteMovement(Tile Totile, GridManager grid, bool isLeftClick)
     {
         var objects = FindObjectsOfType<Piece>();
+        cameraShake.Shake(0.5f, 1.0f);
         foreach (var d in objects)
         {
             if (d.pieceState == PieceState.Blobbed)
@@ -194,7 +196,7 @@ public class GameLoop : MonoBehaviour
                             }
                             if (toPiece.pieceType == PieceType.Car)
                             {
-                                //car logic non split
+                                NonSplittingMovementToBuilding(Totile, grid, piece);
                                 return;
                             }
                             if (toPiece.pieceType == PieceType.Building)
@@ -218,7 +220,7 @@ public class GameLoop : MonoBehaviour
                             }
                             if (toPiece.pieceType == PieceType.Car)
                             {
-                                //car logic  split
+                                SplittingMovementToBuilding(Totile, grid, piece);
                                 return;
                             }
                             if (toPiece.pieceType == PieceType.Building)
